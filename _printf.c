@@ -3,45 +3,68 @@
 #include "main.h"
 
 /**
- * _printf - main function
- * @format: const char format
+ * print_number - Convertit un entier en base 10 et l'écrit.
+ * @n: L'entier à convertir.
  *
- * Description: function that produces output according to a format.
- * Return: Count of the charactere printed.
+ * Return: Le nombre de caractères écrits.
  */
+int print_number(int n)
+{
+	char buffer[12];
+	int i = 0, count = 0;
+	unsigned int num = (n < 0) ? -n : n;
 
+	if (n < 0)
+		count += write(1, "-", 1);
+	do {
+		buffer[i++] = (num % 10) + '0';
+		num /= 10;
+	} while (num > 0);
+
+	while (i--)
+		count += write(1, &buffer[i], 1);
+
+	return (count);
+}
+
+/**
+ * _printf - Fonction principale.
+ * @format: Chaîne de format.
+ *
+ * Return: Nombre de caractères imprimés.
+ */
 int _printf(const char *format, ...)
 {
 	va_list args;
 	int count = 0;
-	int i = 0;
 
-
+	if (!format)
+		return (-1);
 	va_start(args, format);
 	while (*format)
 	{
-		if (*format == '%' && *(format + 1))
+		if (*format == '%' && *(++format))
 		{
-			format++;
 			if (*format == 'c')
 			{
+
 				char c = va_arg(args, int);
 
 				count += write(1, &c, 1);
 			}
 			else if (*format == 's')
-
 			{
 				char *str = va_arg(args, char *);
 
-				for (i = 0; str && str[i]; i++)
-					count += write(1, &str[i], 1);
-
 				if (!str)
-					count += write(1, "(null)", 6);
+					str = "(null)";
+				while (*str)
+					count += write(1, str++, 1);
 			}
 			else if (*format == '%')
 				count += write(1, "%", 1);
+			else if (*format == 'd' || *format == 'i')
+				count += print_number(va_arg(args, int));
 		}
 		else
 			count += write(1, format, 1);
