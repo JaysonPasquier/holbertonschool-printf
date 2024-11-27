@@ -12,16 +12,16 @@
  */
 typedef struct printf_functions
 {
-    int (*print_char)(char);
-    int (*print_string)(char *);
-    int (*print_number)(int);
-    int (*handle_format)(const char **, va_list, struct printf_functions *);
+	int (*print_char)(char);
+	int (*print_string)(char *);
+	int (*print_number)(int);
+	int (*handle_format)(const char **, va_list);
 } printf_functions;
 
 int _printf(const char *format, ...);
 int print_char(char c);
 int print_string(char *s);
 int print_number(int n);
-int handle_format(const char **format, va_list args, printf_functions *pf);
+int handle_format(const char **format, va_list args);
 
 #endif

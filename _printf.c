@@ -29,7 +29,7 @@ int print_string(char *s)
 }
 
 /**
- * print_number - convert an int to base 10 and print it
+ * print_number - convert a int to base 10 and print it
  * @n: int to convert
  * Return: number of char printed
  */
@@ -56,33 +56,32 @@ int print_number(int n)
  * handle_format - handle the spec of format
  * @format: spec of the format
  * @args: list of variadic arguments
- * @pf: pointer to printf_functions structure
  * Return: number of char printed for the spec
  */
-int handle_format(const char **format, va_list args, printf_functions *pf)
+int handle_format(const char **format, va_list args)
 {
 	int count = 0, i, base;
 	char buffer[32], *digits = "0123456789abcdef";
 	unsigned long int num;
 
 	if (**format == 'c')
-		return (pf->print_char(va_arg(args, int)));
+		return (print_char(va_arg(args, int)));
 	if (**format == 's')
-		return (pf->print_string(va_arg(args, char *)));
+		return (print_string(va_arg(args, char *)));
 	if (**format == '%')
-		return (pf->print_char('%'));
+		return (print_char('%'));
 	if (**format == 'd' || **format == 'i')
-		return (pf->print_number(va_arg(args, int)));
+		return (print_number(va_arg(args, int)));
 
 	if (**format == 'u' || **format == 'o' || **format == 'x' ||
-		**format == 'X' || **format == 'p')
+	 **format == 'X' || **format == 'p')
 	{
 		num = (**format == 'p') ? (unsigned long int)va_arg(args, void *) :
 			  va_arg(args, unsigned int);
 		base = (**format == 'o') ? 8 : (**format == 'u') ? 10 : 16;
 
 		if (**format == 'p')
-			count += pf->print_string("0x");
+			count += print_string("0x");
 		if (**format == 'X')
 			digits = "0123456789ABCDEF";
 
@@ -93,13 +92,13 @@ int handle_format(const char **format, va_list args, printf_functions *pf)
 		} while (num && i < 31);
 
 		while (i--)
-			count += pf->print_char(buffer[i]);
+			count += print_char(buffer[i]);
 
 		return (count);
 	}
 
-	count += pf->print_char('%');
-	count += pf->print_char(**format);
+	count += print_char('%');
+	count += print_char(**format);
 	return (count);
 }
 
@@ -123,7 +122,7 @@ int _printf(const char *format, ...)
 		if (*format != '%')
 			count += pf.print_char(*format);
 		else if (*(++format))
-			count += pf.handle_format(&format, args, &pf);
+			count += pf.handle_format(&format, args);
 		format++;
 	}
 	va_end(args);
