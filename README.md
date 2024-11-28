@@ -80,6 +80,13 @@ To use this custom `_printf` function:
 1. Include the header file where the function prototypes are declared (`main.h`).
 2. Call `_printf` with a format string and corresponding arguments.
 
+### Compilation
+
+You need to use this compile command to create a executable files :
+```c
+gcc -Wall -Wextra -Werror -pedantic -std=gnu89 -Wno-format *.c
+```
+
 ### Example
 
 ```c
