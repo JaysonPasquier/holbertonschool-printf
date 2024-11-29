@@ -121,8 +121,16 @@ int _printf(const char *format, ...)
 	{
 		if (*format != '%')
 			count += pf.print_char(*format);
-		else if (*(++format))
+		else if (*(format + 1))
+		{
+			format++;
 			count += pf.handle_format(&format, args);
+		}
+		else
+		{
+			va_end(args);
+			return (-1);
+		}
 		format++;
 	}
 	va_end(args);
